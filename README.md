@@ -1,28 +1,27 @@
 # EY Data Challenge 2023
-In this data competition, the goal was to predict rice harvest based on satelite images from the Sentinel-2 space mission.
-These were the spots for the training data, with the white dots being the test data:
+In this data competition, the goal was to predict rice harvest based on satellite images from the Sentinel-2 space mission. The training data consisted of the following locations, with the white dots representing the test data:
 
-![image](https://github.com/LeoArtaza/EY-Challenge-2023/assets/57342159/bf107c5e-aba0-4112-9c66-81153e672dad)
+![image](https://github.com/LeoArtaza/EY-Data-Challenge-2023/assets/57342159/396ded6b-124f-4274-b53b-f9e40ebb6b08)
 
-First, we download the images through STAC's API, using a custom bounding box for each area, and using cloud filtering to capture only what we are interested in:
+First, the images were downloaded through STAC's API, using a custom bounding box for each area and applying cloud filtering to capture only the relevant data:
 
-![image](https://github.com/LeoArtaza/EY-Challenge-2023/assets/57342159/4a63a638-07ba-4c6a-ad4b-856af4cac1e1)
+![image](https://github.com/LeoArtaza/EY-Data-Challenge-2023/assets/57342159/5b9e9b95-22fa-47e5-9184-530cadfdeb13)
 
-To make use of the photos' information, we take the median values (could also be mean, max, or min) for each of the satellite bands, for each of the images. I also need to resample by 5 days, because the passing of the satellite through the area is not consistent. Then I interpolate through missing values due to cloudy days. We end up with this data:
+To extract information from the photos, median values (which could also be mean, max, or min) were calculated for each of the satellite bands and for each image. Additionally, the data was resampled to every 5 days because the satellite's passage over the area is not consistent. Missing values due to cloudy days were also interpolated, resulting in the following dataset:
 
-![image](https://github.com/LeoArtaza/EY-Challenge-2023/assets/57342159/b75c8f7c-efea-48ab-a5a5-a4efea961e14)
+![image](https://github.com/LeoArtaza/EY-Data-Challenge-2023/assets/57342159/7a38d7d2-8a6d-4c0a-9cb8-7b17e58b3f7b)
 
-Notice that I also calculated multiple metrics which are based on the original bands, such as the NDVI (Normalized Difference Vegetation Index) and NDWI (Normalized Difference Water Index), NDBSI (Normalized Difference Bare Soil Index), and NDRE (Normalized Difference Red Edge Index), each providing different information about the status of the crop:
+t's worth noting that various metrics were calculated based on the original bands, such as the NDVI (Normalized Difference Vegetation Index), NDWI (Normalized Difference Water Index), NDBSI (Normalized Difference Bare Soil Index), and NDRE (Normalized Difference Red Edge Index). Each of these metrics provides different information about the crop's status:
 
 $\text{NDVI} = \frac{\text{NIR} - \text{Red}}{\text{NIR} + \text{Red}}$  
 $\text{NDWI} = \frac{\text{Green} - \text{NIR}}{\text{Green} + \text{NIR}}$  
 $\text{NDBSI} = \frac{(\text{Red} + \text{SWIR}) - (\text{NIR} + \text{Blue})}{(\text{Red} + \text{SWIR}) + (\text{NIR} + \text{Blue})}$  
 $\text{NDRE} = \frac{\text{NIR} - \text{Red Edge}}{\text{NIR} + \text{Red Edge}}$  
 
-With these time series, we need to perform a regression problem on rice yield. Because our data samples are 2D (sequence length, n_features) this task is ideal for a neural network, for which I coded a CNN and also a Transformer architecture with the idea of finding patterns in the time series. Additionally, I also added aggregated data of the time series in tabular form to the neural network in parallel to the time series, with statistical descriptors such as standard deviation, skewness, kurtosis, etc.
+A regression task on rice yield is performed using the time series as data. Because our data samples are 2D (sequence length, satellite_bands) this task is ideal for a neural network, for which both a CNN and also a Transformer architecture were implemented with the idea of finding patterns in the time series. Additionally, aggregated data in tabular form was incorporated into the neural network, in parallel with the time series, with statistical descriptors of the time series such as standard deviation, skewness, kurtosis, etc.
 
-![image](https://github.com/LeoArtaza/EY-Challenge-2023/assets/57342159/668adcb6-15e7-463d-90c0-9b2f9c7afadd)
+![image](https://github.com/LeoArtaza/EY-Data-Challenge-2023/assets/57342159/8c942034-db3a-42b4-b7a2-7d38ab577416)
 
-However, with the aggregated data in tabular form, we can use a gradient boosting algorithm, such as CatBoost, or LightGBM (the 2 best performers for this case). This method turned out to be surprisingly more effective. This could be either because the images, and therefore the time series data, are highly noisy, or simply the fact that the evolution of these metrics over time is not a determinant factor of rice yield.
+However, with the aggregated data in tabular form, a gradient boosting algorithm can be used, such as CatBoost, or LightGBM (the 2 best performers for this case). This method turned out to be surprisingly more effective. This could be either because the images, and therefore the time series data, are highly noisy and thus not that useful, or simply the fact that the evolution of these metrics over time is not a determining factor of rice yield.
 
-![image](https://github.com/LeoArtaza/EY-Challenge-2023/assets/57342159/32b2099c-149b-4f6e-b521-7634db836d10)
+![image](https://github.com/LeoArtaza/EY-Data-Challenge-2023/assets/57342159/a3cf735d-a183-4dee-b30b-d6d970ac7031)
