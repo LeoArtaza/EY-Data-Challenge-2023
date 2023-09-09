@@ -1,3 +1,8 @@
 *
 !.gitignore
+!Level 2
 !Level 2/Version 19.ipynb
+!Level 2/Version 19.csv
+!Level 2/level2_sent2_sub.df
+!Level 2/level2_sent2_train.df
+!Level 2/Crop_Yield_Data_challenge_2.csv
