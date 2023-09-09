@@ -1,2 +1,3 @@
-
-.ipynb_checkpoints/
+*
+!.gitignore
+!Level 2/Version 19.ipynb
