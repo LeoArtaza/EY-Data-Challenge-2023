@@ -11,7 +11,7 @@ To extract information from the photos, median values (which could also be mean,
 
 ![image](https://github.com/LeoArtaza/EY-Data-Challenge-2023/assets/57342159/7a38d7d2-8a6d-4c0a-9cb8-7b17e58b3f7b)
 
-t's worth noting that various metrics were calculated based on the original bands, such as the NDVI (Normalized Difference Vegetation Index), NDWI (Normalized Difference Water Index), NDBSI (Normalized Difference Bare Soil Index), and NDRE (Normalized Difference Red Edge Index). Each of these metrics provides different information about the crop's status:
+It's worth noting that various metrics were calculated based on the original bands, such as the NDVI (Normalized Difference Vegetation Index), NDWI (Normalized Difference Water Index), NDBSI (Normalized Difference Bare Soil Index), and NDRE (Normalized Difference Red Edge Index). Each of these metrics provides different information about the crop's status:
 
 $\text{NDVI} = \frac{\text{NIR} - \text{Red}}{\text{NIR} + \text{Red}}$  
 $\text{NDWI} = \frac{\text{Green} - \text{NIR}}{\text{Green} + \text{NIR}}$  
